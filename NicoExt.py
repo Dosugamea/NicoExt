@@ -14,6 +14,7 @@ import json
 from collections import OrderedDict
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+import lxml.html as lx
 
 imp.reload(sys)
 
@@ -65,9 +66,8 @@ def g_comments(id,dir="./"):
         videoid=id
     elif id.find('so') != -1:
         mode = 1
-        html = str(urllib.request.urlopen("http://www.nicovideo.jp/watch/"+id).read())
-        videoid = html[html.find('<meta itemprop="url')+60:html.find('<meta itemprop="url" content=')+70]
-        print(videoid)
+        html = requests.get("http://www.nicovideo.jp/watch/"+id,headers=headers).text
+        videoid = html[html.find('thread_id&quot;:')+len('thread_id&quot;:'):html.find(',&quot',html.find("thread_id&quot;:"))]
     elif id == "":
         mode = 1
         videoid='1397552685'
